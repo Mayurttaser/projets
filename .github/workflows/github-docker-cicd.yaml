@@ -30,11 +30,11 @@ jobs:
           fetch-depth: 0
       # Checkout repository with full commit history
 
-      - name: Set up Python 3.10
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.10
-      # Sets up Python 3.10 environment
+          python-version: 3.9
+      # Sets up Python 3.9 environment
 
       - name: Install dependencies
         run: |
