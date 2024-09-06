@@ -71,7 +71,7 @@ jobs:
 
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
       # Gets the current date for versioning the Docker image
 
       - name: Build the Docker image
