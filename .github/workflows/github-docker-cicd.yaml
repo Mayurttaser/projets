@@ -1,0 +1,83 @@
+name: Github-Docker Hub MLOps pipeline - Yurttaser
+
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}} # Docker Hub kullanıcı adınız için secret değişkeni
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}} # Docker Hub şifreniz için secret değişkeni
+  REPO_NAME: ${{secrets.REPO_NAME}} # Docker Hub repository adınız için secret değişkeni
+
+# Event Triggers:
+# The pipeline is triggered whenever there is a push to the main branch.
+# It is also triggered whenever there is a pull request to the main branch.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# this pipeline consists of two jobs named ci_pipeline
+
+jobs:
+
+  ci_pipeline: 
+    runs-on: ubuntu-latest # The job runs on the ubuntu-latest operating system
+    
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      # Checkout repository with full commit history
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10
+      # Sets up Python 3.10 environment
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      # Installs dependencies listed in requirements.txt
+
+      - name: Format code
+        run: |
+          black app.py
+      # Formats Python code using black
+
+      - name: Lint code
+        run: |
+          pylint --disable=R,C app.py
+      # Runs pylint to lint Python code
+
+      - name: Run tests
+        run: |
+          python -m pytest -vv test.py
+      # Runs unit tests
+
+  cd_pipeline:
+    runs-on: ubuntu-latest 
+    needs: [ci_pipeline]
+
+    steps:
+      - uses: actions/checkout@v2 
+
+      - name: Docker login
+        run: | 
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+      # Logs into Docker Hub account using secrets
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+      # Gets the current date for versioning the Docker image
+
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+      # Builds the Docker image
+
+      - name: Push Docker image
+        run: docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+      # Pushes the Docker image to Docker Hub

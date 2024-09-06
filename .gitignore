@@ -1,0 +1,8 @@
+.github/workflows/aws.yaml
+__pycache__/
+mlruns/
+mlartifacts/
+venv/
+*.pkl
+Loan_Data.csv
+TP_MlOps_mlflow.ipynb

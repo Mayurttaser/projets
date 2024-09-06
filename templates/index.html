@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Default Prediction</title>
+</head>
+
+<body>
+
+    <div style="color:blue">
+        <form action="{{ url_for('predict')}}" method="post">
+            <h2>Loan Default Prediction</h2>
+            <h3>Credit Lines Outstanding</h3><input id="credit_lines_outstanding" name="credit_lines_outstanding" type="number" required="required">
+            <h3>Loan Amount Outstanding</h3><input id="loan_amt_outstanding" name="loan_amt_outstanding" type="number" step="any" required="required">
+            <h3>Total Debt Outstanding</h3><input id="total_debt_outstanding" name="total_debt_outstanding" type="number" step="any" required="required">
+            <h3>Income</h3><input id="income" name="income" type="number" step="any" required="required">
+            <h3>Years Employed</h3><input id="years_employed" name="years_employed" type="number" required="required">
+            <h3>FICO Score</h3><input id="fico_score" name="fico_score" type="number" required="required">
+            <br><br><button id="sub" type="submit">Predict</button>
+            <br>
+
+        </form>
+
+        <br><br><h3>{{ prediction_text }}</h3>
+    </div>
+
+
+    <style>
+        body {
+            background-color: lightslategray;
+            text-align: center;
+            padding: 0px;
+        }
+
+        #sub {
+            width: 120px;
+            height: 43px;
+            text-align: center;
+            border-radius: 14px;
+            font-size: 18px;
+        }
+
+        #sub:hover {
+            background-color: darkcyan;
+        }
+
+        input[type="number"] {
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</body>
+
+</html>
