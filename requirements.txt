@@ -89,3 +89,4 @@ Werkzeug==3.0.4
 wrapt==1.16.0
 zipp==3.20.1
 black==23.1.0
+pylint==2.15.10
